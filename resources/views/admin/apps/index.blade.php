@@ -65,10 +65,6 @@
                         <label class="form-label">Icon URL</label>
                         <input type="url" name="icon_url" class="form-control" value="{{ $app->icon_url }}">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">FCM Server Key</label>
-                        <textarea name="fcm_server_key" class="form-control" rows="3">{{ $app->fcm_server_key }}</textarea>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Update App</button>
@@ -100,10 +96,6 @@
                     <div class="mb-3">
                         <label class="form-label">Icon URL</label>
                         <input type="url" name="icon_url" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">FCM Server Key</label>
-                        <textarea name="fcm_server_key" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
