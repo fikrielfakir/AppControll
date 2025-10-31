@@ -4,20 +4,41 @@ namespace App\Services;
 
 use App\Models\NotificationEvent;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class NotificationService
 {
     protected NotificationTargetingService $targetingService;
+    protected ?FirebaseService $firebaseService = null;
 
     public function __construct(NotificationTargetingService $targetingService)
     {
         $this->targetingService = $targetingService;
+        
+        try {
+            $this->firebaseService = new FirebaseService();
+        } catch (\Exception $e) {
+            Log::error('Failed to initialize Firebase service: ' . $e->getMessage());
+            $this->firebaseService = null;
+        }
     }
 
     public function sendNotification(NotificationEvent $notification): array
     {
+        if (!$this->firebaseService) {
+            $notification->update([
+                'status' => 'failed',
+                'sent_count' => 0,
+                'delivered_count' => 0,
+            ]);
+            
+            return [
+                'success' => false,
+                'message' => 'Firebase service not available. Please check Firebase credentials configuration.',
+                'sent_count' => 0,
+            ];
+        }
+
         $devices = $this->targetingService->getTargetedDevices($notification);
 
         if ($devices->isEmpty()) {
@@ -28,30 +49,41 @@ class NotificationService
             ];
         }
 
-        $fcmServerKey = $notification->app->fcm_server_key;
-        if (!$fcmServerKey) {
-            return [
-                'success' => false,
-                'message' => 'FCM server key not configured for this app',
-                'sent_count' => 0,
-            ];
-        }
-
         $sentCount = 0;
         $deliveredCount = 0;
 
-        $tokens = $devices->pluck('fcm_token')->filter()->chunk(1000);
+        $tokens = $devices->pluck('fcm_token')->filter()->chunk(500);
+
+        $additionalData = [
+            'notification_id' => (string) $notification->id,
+            'type' => $notification->type ?? 'popup',
+        ];
 
         foreach ($tokens as $tokenChunk) {
             $result = $this->sendBatchNotification(
-                $fcmServerKey,
                 $tokenChunk->toArray(),
                 $notification->title,
-                $notification->body
+                $notification->body,
+                $additionalData
             );
 
-            $sentCount += $result['sent'];
-            $deliveredCount += $result['delivered'];
+            $sentCount += count($tokenChunk);
+            $deliveredCount += $result['successful'] ?? 0;
+        }
+
+        if ($deliveredCount === 0 && $sentCount > 0) {
+            $notification->update([
+                'status' => 'failed',
+                'sent_count' => $sentCount,
+                'delivered_count' => 0,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'All notifications failed to deliver via Firebase',
+                'sent_count' => $sentCount,
+                'delivered_count' => 0,
+            ];
         }
 
         $notification->update([
@@ -63,53 +95,55 @@ class NotificationService
 
         return [
             'success' => true,
-            'message' => 'Notification sent successfully',
+            'message' => 'Notification sent successfully via Firebase',
             'sent_count' => $sentCount,
             'delivered_count' => $deliveredCount,
         ];
     }
 
-    protected function sendBatchNotification(string $fcmServerKey, array $tokens, string $title, string $body): array
+    protected function sendBatchNotification(array $tokens, string $title, string $body, array $data = []): array
     {
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'key=' . $fcmServerKey,
-                'Content-Type' => 'application/json',
-            ])->post('https://fcm.googleapis.com/fcm/send', [
-                'registration_ids' => $tokens,
-                'notification' => [
-                    'title' => $title,
-                    'body' => $body,
-                    'sound' => 'default',
-                ],
-                'priority' => 'high',
-            ]);
+            $result = $this->firebaseService->sendMulticastNotification(
+                $tokens,
+                $title,
+                $body,
+                $data
+            );
 
-            if ($response->successful()) {
-                $data = $response->json();
+            if ($result['success']) {
+                Log::info('Firebase notification sent', [
+                    'sent' => count($tokens),
+                    'successful' => $result['successful'] ?? 0,
+                    'failed' => $result['failed'] ?? 0,
+                ]);
+
                 return [
                     'sent' => count($tokens),
-                    'delivered' => $data['success'] ?? 0,
+                    'successful' => $result['successful'] ?? 0,
+                    'failed' => $result['failed'] ?? 0,
                 ];
             }
 
-            Log::error('FCM notification failed', [
-                'status' => $response->status(),
-                'body' => $response->body(),
+            Log::error('Firebase notification failed', [
+                'error' => $result['error'] ?? 'Unknown error',
             ]);
 
             return [
                 'sent' => count($tokens),
-                'delivered' => 0,
+                'successful' => 0,
+                'failed' => count($tokens),
             ];
         } catch (\Exception $e) {
-            Log::error('FCM notification exception', [
+            Log::error('Firebase notification exception', [
                 'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return [
                 'sent' => count($tokens),
-                'delivered' => 0,
+                'successful' => 0,
+                'failed' => count($tokens),
             ];
         }
     }

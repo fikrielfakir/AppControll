@@ -8,6 +8,35 @@
     </button>
 </div>
 
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show">
+    <i class="bi bi-check-circle"></i> {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger alert-dismissible fade show">
+    <i class="bi bi-exclamation-triangle"></i> {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        @if($firebaseStatus['connected'])
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle-fill"></i> <strong>Firebase Connected:</strong> {{ $firebaseStatus['message'] }}
+        </div>
+        @else
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill"></i> <strong>Firebase Error:</strong> {{ $firebaseStatus['message'] }}
+            <br><small class="mt-2 d-block">Please check <code>FIREBASE_CREDENTIALS</code> in your .env file and ensure the service account JSON file exists. See <strong>FIREBASE_SETUP.md</strong> for details.</small>
+        </div>
+        @endif
+    </div>
+</div>
+
 <div class="row mb-4">
     <div class="col-md-12">
         <div class="card">
@@ -28,9 +57,36 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse($notifications as $notification)
+                        <tr>
+                            <td>{{ $notification->title }}</td>
+                            <td>{{ Str::limit($notification->body, 50) }}</td>
+                            <td>{{ $notification->app ? $notification->app->app_name : 'All Apps' }}</td>
+                            <td>{{ $notification->targeting_rules['countries'][0] ?? 'All' }}</td>
+                            <td>
+                                @if($notification->status == 'sent')
+                                    <span class="badge bg-success">Sent</span>
+                                @elseif($notification->status == 'pending')
+                                    <span class="badge bg-warning">Pending</span>
+                                @else
+                                    <span class="badge bg-secondary">{{ ucfirst($notification->status) }}</span>
+                                @endif
+                            </td>
+                            <td>{{ $notification->sent_at ? $notification->sent_at->format('Y-m-d H:i') : 'Not sent' }}</td>
+                            <td>
+                                @if($notification->sent_count > 0)
+                                    {{ $notification->delivered_count }} / {{ $notification->sent_count }}
+                                    <small class="text-muted">({{ round(($notification->delivered_count / $notification->sent_count) * 100) }}%)</small>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
                         <tr>
                             <td colspan="7" class="text-center text-muted">No notifications sent yet</td>
                         </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
