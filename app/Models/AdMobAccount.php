@@ -23,6 +23,12 @@ class AdMobAccount extends Model
         'weight',
         'usage_count',
         'is_active',
+        'account_id',
+        'banner_id',
+        'interstitial_id',
+        'rewarded_id',
+        'app_open_id',
+        'native_id',
     ];
 
     protected $casts = [

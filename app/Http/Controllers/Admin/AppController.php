@@ -22,7 +22,16 @@ class AppController extends Controller
             'fcm_server_key' => 'nullable',
         ]);
 
-        \App\Models\App::create($validated);
+        $app = \App\Models\App::create($validated);
+        
+        \App\Models\AdMobApp::create([
+            'package_name' => $validated['package_name'],
+            'app_name' => $validated['app_name'],
+            'platform' => 'android',
+            'is_active' => true,
+            'config' => ['version' => '1.0'],
+        ]);
+        
         return redirect()->back()->with('success', 'App created successfully');
     }
 

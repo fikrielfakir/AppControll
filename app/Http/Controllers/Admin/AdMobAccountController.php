@@ -50,13 +50,38 @@ class AdMobAccountController extends Controller
             'interstitial_id' => 'nullable',
             'rewarded_id' => 'nullable',
             'native_id' => 'nullable',
+            'app_open_id' => 'nullable',
+            'account_id' => 'nullable',
         ]);
 
-        $validated['account_id'] = $admobId;
-        $validated['app_id'] = $appId;
-
-        AdMobAdUnit::create($validated);
-        return redirect()->back()->with('success', 'Ad units assigned successfully');
+        $app = App::findOrFail($appId);
+        $account = AdMobAccount::findOrFail($admobId);
+        
+        $account->update([
+            'banner_id' => $validated['banner_id'] ?? null,
+            'interstitial_id' => $validated['interstitial_id'] ?? null,
+            'rewarded_id' => $validated['rewarded_id'] ?? null,
+            'native_id' => $validated['native_id'] ?? null,
+            'app_open_id' => $validated['app_open_id'] ?? null,
+            'account_id' => $validated['account_id'] ?? null,
+        ]);
+        
+        $admobApp = \App\Models\AdMobApp::where('package_name', $app->package_name)->first();
+        
+        if ($admobApp) {
+            $admobApp->update(['default_admob_account_id' => $admobId]);
+        } else {
+            \App\Models\AdMobApp::create([
+                'package_name' => $app->package_name,
+                'app_name' => $app->app_name,
+                'platform' => 'android',
+                'default_admob_account_id' => $admobId,
+                'is_active' => true,
+                'config' => ['version' => '1.0'],
+            ]);
+        }
+        
+        return redirect()->back()->with('success', 'AdMob account assigned to app successfully with ad units');
     }
 
     public function destroy($id)

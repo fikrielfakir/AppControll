@@ -103,25 +103,34 @@
                                                 <select name="app_id" class="form-select" required onchange="document.getElementById('assignForm{{ $account->id }}').action = '{{ route('admob.assign', [$account->id, '']) }}' + '/' + this.value">
                                                     <option value="">Choose app...</option>
                                                     @foreach($apps as $app)
-                                                    <option value="{{ $app->id }}">{{ $app->app_name }}</option>
+                                                    <option value="{{ $app->id }}">{{ $app->app_name }} ({{ $app->package_name }})</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="mb-3">
+                                                <label class="form-label">AdMob App Account ID</label>
+                                                <input type="text" name="account_id" class="form-control" placeholder="ca-app-pub-xxxxxxxxxxxxxxxx~xxxxxxxxxx">
+                                                <small class="text-muted">App-level AdMob ID (with ~)</small>
+                                            </div>
+                                            <div class="mb-3">
                                                 <label class="form-label">Banner Ad Unit ID</label>
-                                                <input type="text" name="banner_id" class="form-control" placeholder="ca-app-pub-xxx/xxx">
+                                                <input type="text" name="banner_id" class="form-control" placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Interstitial Ad Unit ID</label>
-                                                <input type="text" name="interstitial_id" class="form-control" placeholder="ca-app-pub-xxx/xxx">
+                                                <input type="text" name="interstitial_id" class="form-control" placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Rewarded Ad Unit ID</label>
-                                                <input type="text" name="rewarded_id" class="form-control" placeholder="ca-app-pub-xxx/xxx">
+                                                <input type="text" name="rewarded_id" class="form-control" placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">App Open Ad Unit ID</label>
+                                                <input type="text" name="app_open_id" class="form-control" placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx">
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Native Ad Unit ID</label>
-                                                <input type="text" name="native_id" class="form-control" placeholder="ca-app-pub-xxx/xxx">
+                                                <input type="text" name="native_id" class="form-control" placeholder="ca-app-pub-xxxxxxxxxxxxxxxx/xxxxxxxxxx">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
