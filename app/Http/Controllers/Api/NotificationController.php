@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\FirebaseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,9 +11,9 @@ class NotificationController extends Controller
 {
     protected $firebase;
 
-    public function __construct(FirebaseService $firebase)
+    public function __construct()
     {
-        $this->firebase = $firebase;
+        $this->firebase = null;
     }
 
     public function getPending(Request $request)
@@ -138,7 +137,7 @@ class NotificationController extends Controller
             'updated_at' => now(),
         ]);
 
-        if ($request->input('send_now', false)) {
+        if ($request->input('send_now', false) && $this->firebase) {
             $devices = DB::table('devices')
                 ->where('package_name', $validated['package_name'])
                 ->pluck('fcm_token')
