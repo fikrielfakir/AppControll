@@ -1,0 +1,96 @@
+A based from this files java rebuil the  management platform for Android mobile applications with the following features:
+
+Core Platform Requirements:
+Multi-tenant architecture supporting multiple Android apps
+
+Admin panel for centralized management of all apps and AdMob accounts
+
+Real-time dashboard with analytics and performance metrics
+
+AdMob Account Management:
+Dynamic Ad Unit Management: System to switch between multiple AdMob accounts with different ad units (banner, interstitial, rewarded)
+
+Account Rotation: Automated or manual switching between AdMob accounts based on performance, geographic location, or time-based rules
+
+Ad Unit Configuration: Interface to configure and assign different ad unit IDs for each app
+
+Performance Analytics: Track CTR, fill rate, revenue per ad unit and account
+
+A/B Testing: Test different ad configurations and accounts simultaneously
+
+Push Notification System:
+Targeted Notifications: Send notifications based on user segments, app usage, geographic location
+
+Scheduled Campaigns: Plan and schedule notification campaigns in advance
+
+Rich Notifications: Support for images, action buttons, deep links, and custom payloads
+
+Notification Templates: Reusable templates for common notification types
+
+Delivery Analytics: Track open rates, click-through rates, and conversion metrics
+
+A/B Testing: Test different notification content and timing
+
+App & Device Management:
+App Registration: Onboard new Android applications to the platform
+
+Device Registry: Track all installed devices with FCM tokens, app versions, and device information
+
+User Segmentation: Create user segments based on behavior, demographics, or app usage patterns
+
+Version Management: Track different app versions and target notifications accordingly
+
+Analytics & Reporting:
+Real-time Dashboard: Display key metrics for all connected apps
+
+Ad Performance: Revenue, impressions, clicks per app and ad account
+
+User Engagement: Daily active users, session length, retention rates
+
+Notification Performance: Delivery rates, engagement metrics, conversion tracking
+
+Export Capabilities: Generate reports in CSV, PDF, and Excel formats
+
+Integration Features:
+RESTful API: Complete API for mobile app integration (device registration, config updates, event tracking)
+
+Firebase FCM Integration: Robust push notification delivery system
+
+Webhook Support: For real-time updates and third-party integrations
+
+Configuration Management: Dynamic remote config updates for all connected apps
+
+Security & Administration:
+Role-based Access Control: Different permission levels for admins, managers, and viewers
+
+Audit Logs: Track all platform activities and changes
+
+Data Privacy: GDPR-compliant data handling and user consent management
+
+API Security: Secure token-based authentication for all API endpoints
+
+Technical Specifications:
+Backend: Laravel 10+ with PHP 8.1+
+
+Database: MySQL/PostgreSQL with Redis for caching
+
+Queue System: Horizon for job processing and notification delivery
+
+Real-time Features: Laravel Echo with WebSocket support
+
+File Storage: AWS S3 or similar for media files
+
+Monitoring: Integrated error tracking and performance monitoring
+
+Mobile App Integration:
+The platform should seamlessly integrate with the existing Android Java codebase, particularly:
+
+Device registration endpoints matching DeviceRegistrationManager
+
+Configuration API for AdMob account switching
+
+Notification tracking and analytics endpoints
+
+Remote configuration updates for ad units and app settings
+
+The platform should provide a user-friendly interface that allows non-technical staff to manage AdMob accounts, send notifications, and monitor app performance without requiring code changes or app updates.

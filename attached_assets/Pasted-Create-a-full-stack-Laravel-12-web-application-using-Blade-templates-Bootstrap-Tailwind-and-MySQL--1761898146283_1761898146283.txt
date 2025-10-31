@@ -1,0 +1,224 @@
+Create a full-stack Laravel 12 web application using Blade templates, Bootstrap/Tailwind, and MySQL for managing Android apps, AdMob accounts, notifications, users, and analytics — all in one unified dashboard.
+
+⚙️ CORE FEATURES
+1. Apps Management (Main Module)
+
+CRUD (Create, Read, Update, Delete) for apps.
+
+Fields:
+
+package_name
+
+app_name
+
+status (active/inactive)
+
+created_at
+
+Display in a paginated table with:
+
+Search bar
+
+Sorting by column
+
+Status badge (green = Active, gray = Inactive)
+
+Action buttons (Edit / Delete)
+
+Modal form for adding new apps.
+
+Use Eloquent model AppModel with migration apps table.
+
+2. AdMob Account Management
+
+Manage multiple AdMob accounts and assign ad units to apps.
+
+Tables:
+
+admob_accounts: account name, publisher_id, status.
+
+ad_units: banner_id, interstitial_id, rewarded_id, app_id, account_id.
+
+Features:
+
+Add / edit / delete AdMob accounts.
+
+Switch between accounts.
+
+Assign different ad units per app.
+
+Display current ad unit configuration.
+
+Show total revenue per app (mock or manually entered).
+
+3. Push Notifications (via FCM)
+
+Manage notifications directly from dashboard.
+
+Fields:
+
+title, message, target_app, target_country, target_version
+
+status (sent/pending)
+
+Integrate Firebase Cloud Messaging (FCM) with server key.
+
+Allow admin to:
+
+Send notification to all or specific app.
+
+View delivery status (sent/opened).
+
+Store history in notifications table.
+
+Use Http::post() for FCM endpoint to send messages.
+
+4. Device & User Registry
+
+Table: devices
+
+device_id, fcm_token, app_id, country, version, last_active
+
+Display device list in dashboard with:
+
+Filter by app, country, last active date.
+
+Count active devices per app.
+
+Relationship:
+
+AppModel → hasMany(Device)
+
+⚡ ENHANCED MODULES
+5. Analytics Dashboard
+
+Real-time dashboard with key metrics:
+
+Total Apps
+
+Active Users
+
+Total Notifications Sent
+
+Total Revenue
+
+Use charts (via Chart.js) for:
+
+Daily revenue graph
+
+Notification engagement
+
+Active users over time
+
+Filters by date and app.
+
+6. User Management (Role-Based)
+
+User roles:
+
+Admin → full access
+
+Manager → limited (assigned apps)
+
+Viewer → read-only
+
+Tables:
+
+users, roles, role_user
+
+Middleware for access control.
+
+Activity logs for key actions (app creation, notification sent).
+
+7. RESTful API (for Android Integration)
+
+Public API endpoints:
+
+/api/devices/register → register FCM token
+
+/api/config → fetch ad units, app status
+
+/api/events → send event tracking data
+
+Use Sanctum or Passport for token-based authentication.
+
+JSON responses formatted for mobile consumption.
+
+🚀 ADVANCED PHASE (OPTIONAL)
+8. Extra Features
+
+A/B testing for notifications and ads.
+
+Automated AdMob switching.
+
+Scheduled notifications.
+
+Bulk operations across apps.
+
+Export reports as CSV or PDF.
+
+🎨 FRONTEND (BLADE)
+
+Layout:
+
+Sidebar navigation with links:
+
+Dashboard
+
+Apps
+
+AdMob Accounts
+
+Notifications
+
+Devices
+
+Analytics
+
+Users
+
+Navbar with Logout button.
+
+Pages:
+
+Dashboard → overview cards + charts
+
+Apps → table + modal for adding/editing
+
+AdMob Accounts → list + ad units per app
+
+Notifications → send form + history log
+
+Devices → list with filters
+
+Analytics → charts for metrics
+
+Users → role management
+
+Fully responsive with Tailwind or Bootstrap 5.
+
+🔑 IMPLEMENTATION PRIORITY
+
+Phase 1 – MVP:
+
+Apps CRUD
+
+AdMob account setup
+
+Push notification sending
+
+Device registry
+
+Basic dashboard analytics
+
+Phase 2 – Core System:
+
+Charts and analytics
+
+User roles
+
+REST API integration
+
+Phase 3 – Advanced:
+
+A/B testing, rules, scheduling

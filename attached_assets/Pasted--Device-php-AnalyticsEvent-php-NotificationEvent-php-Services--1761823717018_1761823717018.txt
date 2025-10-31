@@ -1,0 +1,131 @@
+│   ├── Device.php
+│   ├── AnalyticsEvent.php
+│   └── NotificationEvent.php
+├── Services/
+│   ├── AdMobStrategyService.php
+│   ├── NotificationTargetingService.php
+│   ├── AnalyticsService.php
+│   ├── DeviceService.php
+│   └── NotificationService.php
+└── Providers/
+    └── AppServiceProvider.php
+
+resources/
+└── views/
+    ├── layouts/
+    │   ├── app.blade.php (main layout with sidebar)
+    │   └── guest.blade.php (login layout)
+    └── admin/
+        ├── dashboard.blade.php
+        ├── apps/
+        │   └── index.blade.php
+        ├── admob-accounts/
+        │   └── index.blade.php
+        ├── notifications/
+        │   └── index.blade.php
+        ├── analytics.blade.php
+        └── settings/
+            └── index.blade.php
+Coding Standards
+Follow PSR-12 coding standards
+Use Laravel Pint for code formatting
+Type hint all method parameters and return types
+Write descriptive variable and method names
+Add PHPDoc comments for complex methods
+Testing
+Write Feature tests for API endpoints
+Write Unit tests for Services
+Test authentication and authorization
+Test switching strategies
+Test notification targeting logic
+Default Data to Seed
+Admin User
+Username: admin
+Password: admin123
+Email: admin@example.com
+Role: admin
+Sample App (for testing)
+Package Name: com.example.testapp
+App Name: Test Application
+Icon URL: https://via.placeholder.com/512
+FCM Server Key: (dummy for testing)
+Environment Configuration
+Required .env variables:
+
+APP_NAME="Android Platform Control"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://0.0.0.0:5000
+
+
+SESSION_DRIVER=database
+QUEUE_CONNECTION=database
+CACHE_STORE=database
+
+JWT_SECRET=your_jwt_secret_here
+FCM_SERVER_KEY=your_fcm_key_here
+Android Integration Documentation
+Create comprehensive documentation for Android developers:
+
+Quick Start Guide
+
+How to integrate with the Laravel backend
+Required dependencies (Firebase, Retrofit, etc.)
+Sample code snippets
+API Integration Guide
+
+Detailed API endpoint documentation
+Request/response examples
+Error handling
+Authentication (if needed)
+Java/Kotlin Sample Code
+
+AdMobConfigManager class
+DeviceRegistrationManager class
+NotificationManager class
+Firebase Messaging Service
+Deployment Checklist
+ Configure Supabase PostgreSQL database
+ Update .env with production settings
+ Generate APP_KEY and JWT_SECRET
+ Run migrations: php artisan migrate --force
+ Seed admin user: php artisan db:seed
+ Optimize for production: php artisan config:cache
+ Set up queue worker: php artisan queue:work
+ Configure server to serve from /public folder
+ Enable HTTPS/SSL
+ Set up CORS for API
+ Configure rate limiting
+ Change default admin password
+ Test all endpoints
+ Monitor logs: storage/logs/laravel.log
+Success Criteria
+The application is complete when:
+
+✅ Admin can log in and access dashboard
+✅ Admin can manage apps (CRUD operations)
+✅ Admin can manage AdMob accounts (CRUD operations)
+✅ Admin can configure switching strategies
+✅ Admin can create and send notifications
+✅ Admin can view analytics and charts
+✅ Android app can fetch AdMob configuration
+✅ Android app can register devices
+✅ Android app can track analytics events
+✅ Android app can receive and track notifications
+✅ All switching strategies work correctly
+✅ Notification targeting rules work correctly
+✅ Charts display real data correctly
+✅ All forms have proper validation
+✅ Error handling works properly
+✅ UI is responsive and works on mobile
+✅ API returns proper JSON responses
+✅ Database indexes are optimized
+✅ Security measures are implemented
+✅ Documentation is complete
+Additional Notes
+No build process: Use Bootstrap, Chart.js, and DataTables via CDN
+Pure Laravel: Server-side rendering with Blade templates
+PostgreSQL via Supabase: Use connection pooler for IPv4 support
+Simple architecture: Easy to understand, maintain, and deploy
+Production-ready: Security, validation, error handling built-in
+Well-documented: Clear API docs and Android integration guides
